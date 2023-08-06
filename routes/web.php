@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.home');
+});
+Route::get('login', [PageController::class, 'loginView'])->name('login');
+Route::post('login', [PageController::class, 'login']);
+Route::post('logout', [PageController::class, 'logout'])->name('logout');
+
+Route::middleware(['guest'])->prefix('sistem')->group(function () {
+    Route::get('/', [SettingController::class, 'dashboard'])->name('dashboard');
+    Route::resources([
+        'settings' => SettingController::class,
+        'posts' => PostController::class,
+    ]);
 });
